@@ -1,62 +1,97 @@
 from random import randrange
 
-class Board():
-    def __init__(self):
-        self.SIZE = 9
-        self.ROW_SEPARATOR = "+---+---+---+---+---+---+---+---+---+"
-        self.board = [ [0 for x in range(9)] for y in range(9) ]
-        self._init_board()
-        self._solve_sudoku()
+SIZE                       = 9
+ROW_SEPARATOR              = "+---+---+---+---+---+---+---+---+---+"
 
-    def _init_board(self) -> None:
-        x: int = randrange(9)
-        y: int = randrange(9)
-        self.board[y][x] = randrange(1, 10)
+def init_board() -> list[list[int]]:
+    board = [ [ 0 for _ in range(9)] for _ in range(9) ]
+    x: int = randrange(9)
+    y: int = randrange(9)
+    board[y][x] = randrange(1, 10)
+    board[y][x] = 0
+    return board
 
-    def print_board(self) -> None:
-        board = self.ROW_SEPARATOR + "\n"
-        for y in range(self.SIZE):
-            row = "| "
+def print_board(board: list[list[int]]) -> None:
+    pp_board = ROW_SEPARATOR + "\n"
+    for y in range(SIZE):
+        row = "| "
 
-            for x in range(self.SIZE):
-                row += str(self.board[y][x]) + " | "
+        for x in range(SIZE):
+            row += str(board[y][x]) + " | "
 
-            board += row + "\n"
-            board += self.ROW_SEPARATOR + "\n"
+        pp_board += row + "\n"
+        pp_board += ROW_SEPARATOR + "\n"
 
-        print(board)
+    print(pp_board)
 
-    def place_value(self, x: int, y: int, value: int) -> None:
-        self.board[y][x] = value
+def place_value(board: list[list[int]], x: int, y: int, value: int) -> None:
+    board[y][x] = value
 
-    def _is_row_valid(self, y: int) -> bool:
-        values = [i for i in range(1,10)]
+def is_row_valid(board: list[list[int]], y: int) -> bool:
+    values: list[int] = [i for i in range(1,10)]
 
-        for number in self.board[y]:
-            if number in values:
-                values.remove(number)
-            if number != 0 and number not in values:
-                return False
-        return True
+    for number in board[y]:
+        if number in values:
+            values.remove(number)
+        elif number != 0 and number not in values:
+            return False
+    return True
 
-    def _is_col_valid(self, x: int) -> None:
-        values = [i for i in range(1,10)]
+def is_col_valid(board: list[list[int]], x: int) -> bool:
+    values: list[int] = [i for i in range(1,10)]
 
-        for i in range(9):
-            number = self.board[i][x]
-            if number in values:
-                values.remove(number)
-            if number != 0 and number not in values:
-                return False
-        return True
+    for i in range(9):
+        number = board[i][x]
+        if number in values:
+            values.remove(number)
+        elif number != 0 and number not in values:
+            return False
+    return True
 
-    def _solve_sudoku(self, values: list[int]):
+def is_box_valid(board: list[list[int]], box: int) -> bool:
+    board_box = [ ((box%3)*3 + (i%3),(box//3)*3 + (i//3)) for i in range(9) ]
+    values = [i for i in range(1, 10)]
 
-        for y in range(self.SIZE):
-            for x in range(self.SIZE):
-                if self.board[y][x] == 0 and len(values) > 0:
-                    self.board[y][x] = values.pop(0)
-                elif self.board[y][x] == 0:
-                    return
+    for x,y in board_box:
+        number = board[y][x]
+        if number in values:
+            values.remove(number)
+        elif number != 0 and number not in values:
+            return False
+
+    return True
+
+def is_legal_move(board: list[list[int]], x: int, y: int, number: int) -> bool:
+    current_number: int = board[y][x]
+    board[y][x] = number 
+    valid = None
+    box: int = (x//3) + (y//3) * 3
+
+    if is_col_valid(board, x) and is_row_valid(board, y) and is_box_valid(board, box):
+        valid = True
+    else:
+        valid = False
+
+    board[y][x] = current_number
+    return valid
+
+def solve_sudoku(board: list[list[int]]) -> None:
+
+    for y in range(SIZE):
+        for x in range(SIZE):
+            values: list[int] = [i for i in range(1, 10)]
+            if board[y][x] == 0:
+
+                for value in values:
+                    if is_legal_move(board, x, y, value):
+                        print(123123123)
+                        board[y][x] = value
+                        print_board(board)
+
+                        return solve_sudoku(board)
+
+                board[y][x] = 0
+
+
 
 
