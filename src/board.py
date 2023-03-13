@@ -5,10 +5,6 @@ ROW_SEPARATOR              = "+---+---+---+---+---+---+---+---+---+"
 
 def init_board() -> list[list[int]]:
     board = [ [ 0 for _ in range(9)] for _ in range(9) ]
-    x: int = randrange(9)
-    y: int = randrange(9)
-    board[y][x] = randrange(1, 10)
-    board[y][x] = 0
     return board
 
 def print_board(board: list[list[int]]) -> None:
@@ -76,21 +72,22 @@ def is_legal_move(board: list[list[int]], x: int, y: int, number: int) -> bool:
     return valid
 
 def solve_sudoku(board: list[list[int]]) -> None:
+    print_board(board)
 
     for y in range(SIZE):
         for x in range(SIZE):
             values: list[int] = [i for i in range(1, 10)]
-            if board[y][x] == 0:
 
+            if board[y][x] == 0:
                 for value in values:
                     if is_legal_move(board, x, y, value):
-                        print(123123123)
                         board[y][x] = value
-                        print_board(board)
 
-                        return solve_sudoku(board)
+                        solve_sudoku(board)
 
                 board[y][x] = 0
+                print(f"x: {x} y: {y}")
+                return
 
 
 
