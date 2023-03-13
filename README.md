@@ -1,1 +1,3 @@
 # Sudoku
+
+In the terminal
