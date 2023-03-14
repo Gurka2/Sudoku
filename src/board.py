@@ -95,8 +95,6 @@ def is_legal_move(board: list[list[int]], x: int, y: int, number: int) -> bool:
     return valid
 
 def solve_sudoku(board: list[list[int]]):
-    print_board(board)
-
     for y in range(SIZE):
         for x in range(SIZE):
 
@@ -112,7 +110,6 @@ def solve_sudoku(board: list[list[int]]):
                             return
 
                 board[y][x] = 0
-                print("return")
                 return
 
 
