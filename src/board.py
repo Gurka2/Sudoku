@@ -1,27 +1,37 @@
 from random import randrange
 
 SIZE                       = 9
-ROW_SEPARATOR              = "+---+---+---+---+---+---+---+---+---+"
+TOP_ROW              = '\u250f\u2501\u2501\u2501\u252f\u2501\u2501\u2501\u252f\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u252f\u2501\u2501\u2501\u252f\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u252f\u2501\u2501\u2501\u252f\u2501\u2501\u2501\u2513'
+BIG_ROW_SEPARATOR = '\u2523\u2501\u2501\u2501\u253f\u2501\u2501\u2501\u253f\u2501\u2501\u2501\u254b\u2501\u2501\u2501\u253f\u2501\u2501\u2501\u253f\u2501\u2501\u2501\u254b\u2501\u2501\u2501\u253f\u2501\u2501\u2501\u253f\u2501\u2501\u2501\u252b'
+SMAL_ROW_SEPARATOR = '\u2520\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2542\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2542\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2528'
+BOTTOM_ROW              = '\u2517\u2501\u2501\u2501\u2537\u2501\u2501\u2501\u2537\u2501\u2501\u2501\u253b\u2501\u2501\u2501\u2537\u2501\u2501\u2501\u2537\u2501\u2501\u2501\u253b\u2501\u2501\u2501\u2537\u2501\u2501\u2501\u2537\u2501\u2501\u2501\u251b'
 
 def init_board() -> list[list[int]]:
     board = [ [ 0 for _ in range(9)] for _ in range(9) ]
     return board
 
 def print_board(board: list[list[int]]) -> None:
-    pp_board = ROW_SEPARATOR + "\n"
+    pp_board = TOP_ROW + "\n"
     for y in range(SIZE):
-        row = "| "
+        row = '\u2503 '
 
         for x in range(SIZE):
-            row += str(board[y][x]) + " | "
+            row += str(board[y][x])
+            if x % 3 == 2:
+                row += " \u2503 "
+            else:
+                row += " \u2502 "
 
         pp_board += row + "\n"
-        pp_board += ROW_SEPARATOR + "\n"
+        if y != 8:
+            if y%3 != 2:
+                pp_board += SMAL_ROW_SEPARATOR + "\n"
+            else:
+                pp_board += BIG_ROW_SEPARATOR + "\n"
+        else:
+            pp_board += BOTTOM_ROW
 
     print(pp_board)
-
-def place_value(board: list[list[int]], x: int, y: int, value: int) -> None:
-    board[y][x] = value
 
 def is_row_valid(board: list[list[int]], y: int) -> bool:
     values: list[int] = [i for i in range(1,10)]
@@ -57,6 +67,19 @@ def is_box_valid(board: list[list[int]], box: int) -> bool:
 
     return True
 
+def is_solved(board: list[list[int]]) -> bool:
+    for i in range(SIZE):
+        if not is_box_valid(board, i) or not is_col_valid(board, i) or \
+        not is_row_valid(board, i):
+            return False
+
+    for y in range(SIZE):
+        for x in range(SIZE):
+            if board[y][x] == 0:
+                return False
+    return True
+
+
 def is_legal_move(board: list[list[int]], x: int, y: int, number: int) -> bool:
     current_number: int = board[y][x]
     board[y][x] = number 
@@ -71,24 +94,25 @@ def is_legal_move(board: list[list[int]], x: int, y: int, number: int) -> bool:
     board[y][x] = current_number
     return valid
 
-def solve_sudoku(board: list[list[int]]) -> None:
+def solve_sudoku(board: list[list[int]]):
     print_board(board)
 
     for y in range(SIZE):
         for x in range(SIZE):
-            values: list[int] = [i for i in range(1, 10)]
 
             if board[y][x] == 0:
+                values: list[int] = [i for i in range(1, 10)]
+
                 for value in values:
                     if is_legal_move(board, x, y, value):
-                        board[y][x] = value
 
+                        board[y][x] = value
                         solve_sudoku(board)
+                        if is_solved(board):
+                            return
 
                 board[y][x] = 0
-                print(f"x: {x} y: {y}")
+                print("return")
                 return
-
-
 
 

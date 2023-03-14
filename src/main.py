@@ -1,4 +1,4 @@
-from board import init_board, is_legal_move, is_row_valid, is_col_valid, place_value, print_board, is_box_valid, solve_sudoku
+from board import init_board, is_legal_move, is_row_valid, is_col_valid, print_board, is_box_valid, solve_sudoku
 
 # coord (6, 1) to (8, 1) is bugged
 # it recongizes it is zero but places no value in the square
@@ -29,12 +29,40 @@ def main() -> None:
             [0,0,0,8,0,0,3,4,9],
             [5,4,0,0,0,0,0,0,0],
             ]
-    print_board(board)
-    solve_sudoku(easy_board)
-    print(is_legal_move(test_board, 6, 1, 4))
-    # print_board(test_board)
-    # print_board(board)
-    pass
+    easy_board2 = [
+            [8,0,4,3,0,6,7,0,0],
+            [3,5,1,0,0,0,9,0,0],
+            [0,0,7,5,1,0,0,3,4],
+            [2,7,0,0,0,0,6,0,9],
+            [0,0,5,9,6,0,0,0,7],
+            [0,9,0,0,0,8,0,4,3],
+            [0,0,0,8,2,1,0,0,6],
+            [0,3,8,0,0,9,1,2,0],
+            [7,0,0,6,0,0,4,0,0],
+            ]
+    solved = [[1,2,3,4,5,6,7,8,9],
+            [4,5,6,7,8,9,1,2,3],
+            [7,8,9,1,2,3,4,5,6],
+            [2,1,4,3,6,5,8,9,7],
+            [3,6,5,8,9,7,2,1,4],
+            [8,9,7,2,1,4,3,6,5],
+            [5,3,1,6,4,2,9,7,8],
+            [6,4,2,9,7,8,5,3,1],
+            [9,7,8,5,3,1,6,4,2],
+            ]
+    empty = [
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            ]
+    solve_sudoku(empty)
+    print_board(empty)
 
 
 main()
