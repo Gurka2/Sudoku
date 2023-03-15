@@ -1,8 +1,8 @@
 # TODO
-- Render class
+## Render class
 * Replace print_board() function
-- Square class
+## Square class
 * What squares did the user input
 * What squares were given
-- Vim keybinds
+## Vim keybinds
 * Obviously
