@@ -103,3 +103,4 @@ def render_board_at_pos(board: list[list[int]], board_pos: tuple[int, int]):
             print_at_pos(_x, _y, BOT_ROW)
         else:
             print_at_pos(_x, _y, BIG_ROW_SEPARATOR)
+

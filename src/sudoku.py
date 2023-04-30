@@ -1,15 +1,15 @@
-# internal
-from board import init_empty_board, solve_sudoku
+# internal imports
+from board import *
 from render import clear_terminal, hide_cursor, move_courser_to_pos, render_board_at_pos, render_cursor_pos, show_cursor
 from color import Color
 
-# external
+# external imports
 from typing import Any
 
 # requirements
 import getch
 
-class Sudoku():
+class Game():
     """ This class is actually a struct """
 
     def __init__(self, board_pos_x, board_pos_y):
@@ -18,7 +18,8 @@ class Sudoku():
         self.cursor_x = 8
         self.cursor_y = 1
         self.cursor_color = Color.CYAN
-        self.board = init_empty_board()
+        #self.board = init_game_board()
+        self.csp_board = init_csp_game_board()
         self.user_input = []
         self.exit = False
 
@@ -46,6 +47,7 @@ def handle_cursor_movement(game: object):
     user_input: list[str] = game.user_input
 
     # TODO: DRY
+    # TODO: Errors (ignore invalid inputs)
     # TODO: Redraw after mouse moved
     if user_input[-1] == 'h':
 
@@ -114,11 +116,20 @@ def handle_user_input(game: dict[str, Any]):
     if user_input in '123456789':
         return
 
+def csp_board_to_normal_board(board: list[list[Box]]) -> list[list[int]]:
+    return [[box.square for box in row] for row in board]
+
+def init_csp_game_board() -> list[list[int]]:
+    csp_board = init_empty_csp_board()
+    init_random_values_csp(csp_board)
+    init_boxes(csp_board)
+
+    return csp_board
+
 def start_sudoku(board_pos_x: int, board_pos_y: int):
 
     # Init game variables
-    game = Sudoku(board_pos_x, board_pos_y)
-    solve_sudoku(game.board)
+    game = Game(board_pos_x, board_pos_y)
 
     hide_cursor()
 
@@ -127,7 +138,8 @@ def start_sudoku(board_pos_x: int, board_pos_y: int):
 
         # Graphics
         clear_terminal()
-        render_board_at_pos(game.board, game.board_pos)
+        board = csp_board_to_normal_board(game.csp_board)
+        render_board_at_pos(board, game.board_pos)
         cursor_abs_pos = calculate_abs_cursor_pos(game.cursor_x,
                                                   game.cursor_y,
                                                   game.board_pos)
