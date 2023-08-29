@@ -13,15 +13,15 @@ class Game():
     """ This class is actually a struct """
 
     def __init__(self, board_pos_x, board_pos_y):
-        self.x = 1
-        self.board_pos = (board_pos_x, board_pos_y)
-        self.cursor_x = 8
-        self.cursor_y = 1
-        self.cursor_color = Color.CYAN
+        self.x: int = 1
+        self.board_pos: tuple[int, int] = (board_pos_x, board_pos_y)
+        self.cursor_x: int = 8
+        self.cursor_y: int = 1
+        self.cursor_color: Color = Color.CYAN
         #self.board = init_game_board()
-        self.csp_board = init_csp_game_board()
-        self.user_input = []
-        self.exit = False
+        self.csp_board: list[list[Box]] = init_csp_game_board()
+        self.user_input: list[Any] = []
+        self.exit: bool = False
 
 def calculate_abs_cursor_pos(cursor_relative_x: int,
                              cursor_relative_y: int,
@@ -39,7 +39,7 @@ def calculate_abs_cursor_pos(cursor_relative_x: int,
 
     return (cursor_abs_x, cursor_abs_y)
 
-def handle_cursor_movement(game: object):
+def handle_cursor_movement(game: Game):
     """ 
     Moves the cursor around the board according to vim keybinds
     without going outside of the board
@@ -103,7 +103,7 @@ def take_user_input() -> list[str]:
     # crashes on anything but esc, letters and number, e.g. ctrl-d => crash
     return [getch.getch()]
 
-def handle_user_input(game: dict[str, Any]):
+def handle_user_input(game: Game):
     user_input = game.user_input[-1]
     
     if user_input in 'qp':
@@ -119,7 +119,7 @@ def handle_user_input(game: dict[str, Any]):
 def csp_board_to_normal_board(board: list[list[Box]]) -> list[list[int]]:
     return [[box.square for box in row] for row in board]
 
-def init_csp_game_board() -> list[list[int]]:
+def init_csp_game_board() -> list[list[Box]]:
     csp_board = init_empty_csp_board()
     init_random_values_csp(csp_board)
     init_boxes(csp_board)
